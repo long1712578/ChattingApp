@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ABC/Documents/NetBeansProjects/ChattingApp/src/chattingapp/ServerJFrame.java</file>
+            <file>file:/C:/Users/ABC/Documents/NetBeansProjects/ChattingApp/src/MyClientJFrame.java</file>
+            <file>file:/C:/Users/ABC/Documents/NetBeansProjects/ChattingApp/src/LoginJFrame.java</file>
+            <file>file:/C:/Users/ABC/Documents/NetBeansProjects/ChattingApp/src/SignUpJFrame.java</file>
+            <file>file:/C:/Users/ABC/Documents/NetBeansProjects/ChattingApp/src/MyServerJFrame.java</file>
         </group>
     </open-files>
 </project-private>
