@@ -1,10 +1,13 @@
 
 import java.io.*;
 import java.net.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,54 +26,113 @@ public class MyServerJFrame extends javax.swing.JFrame {
      */
     ServerSocket ss;
     Socket s;
-     private final int BUFFER_SIZE = 16*1024;
-     int k=0;
+    private final int BUFFER_SIZE = 16 * 1024;
+    int k = 0;
     //Chứa danh sách tất cả client
-    HashMap clientAll=new HashMap();
+    HashMap clientAll = new HashMap();
+    //-----11-----
+    MyConnect myConn = new MyConnect();
+
     public MyServerJFrame() {
-        try{
+        try {
+            //------1----
+            myConn.connect();
             initComponents();
             //Tao serversocket và lắng nghe port 3211
-            ss=new ServerSocket(3211);
+            ss = new ServerSocket(3211);
             InetAddress addr = InetAddress.getLocalHost();
- 
-             //Host IP Address
+
+            //Host IP Address
             String ipAddress = addr.getHostAddress();
             //System.out.println("IP: "+ ipAddress);
-            this.lbStatus.setText("Port: "+ss.getLocalPort()+" - IP: "+ipAddress);
+            this.lbStatus.setText("Port: " + ss.getLocalPort() + " - IP: " + ipAddress);
             //Chấp nhận các yêu cầu kết nối từ client
-             new ClientAccep().start();
-        }catch(Exception e){
+            new ClientAccep().start();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    class ClientAccep extends Thread{
+
+    class ClientAccep extends Thread {
+
         //private Socket s;
         public void run() {
             while (true) {
                 try {
-                    
+                    //Kiem tra mat khau---1--
+                    ResultSet rs = myConn.getData("login_client");
                     //serversocket chấp nhận socket của client kết nối
-                    s=ss.accept();//doi client
+                    s = ss.accept();//doi client
                     //Doc du lieu của socket gui cho server
                     String i = new DataInputStream(s.getInputStream()).readUTF();//Ten của client chay trong server
-                    System.out.println("i server: "+i);
-                    //Kiiemr tra neu tu khoa cua client trung voi server thi báo da ton tai tai khoản trong server
-                    if (clientAll.containsKey(i)) {
-                        //Gửi thông tin này cho client
-                        DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                        dout.writeUTF("Tài khoản này đa tồn tại trong server.");
+                    System.out.println("i server: " + i);
+                    //Kiem tra phan dangki
+                    //Kiem tra dang nhap
+                    if (i.contains("signup")) {
+                        i = i.substring(6);
+                        //System.out.println("i signup: "+i);
+                        StringTokenizer st = new StringTokenizer(i, ":");
+                        //Lay user va pass tu login gui den---1---
+                        i = st.nextToken();
+                        String pass = st.nextToken();
+                        System.out.println("user: " + i + "; pass: " + pass);
+                        int check1 = 0;
+                        try {
+                            while (rs.next()) {
+                                if (rs.getString("usename").equals(i) && rs.getString("pass").equals(pass)) {
+                                    check1 = 1;
+                                    
+                                    //Gui cho user la tai khoan nay da dang ki
+                                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                                    dout.writeUTF("no123");
+                                    break;
+                                }
+                            }
+                            //Dang ki tai khoan
+                            if(check1==0){
+                                myConn.insertAccount(i, pass);
+                                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                                dout.writeUTF("yes123");
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("ERROR CONN SignUp");
+                        }
+
                     } else {
-                        //them du lieu của i(key) va du du lieu(s client) vao trong server
-                        clientAll.put(i, s);
-                        //In ra man hinh hien thi cua server
-                        msgBox.append(i+" đang online \n");
-                        // Truyen du lieu cho socket đó
-                        DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-                        dout.writeUTF("");
-                        //Nhan tin nhan của client
-                        new MsgRead(s,i).start();
-                        new PrepareClientList().start();
+
+                        StringTokenizer st = new StringTokenizer(i, ":");
+                        //Lay user va pass tu login gui den---1---
+                        i = st.nextToken();
+                        String pass = st.nextToken();
+                        //System.out.println("user: "+i+"; pass: "+pass);
+                        int check = 0;
+                        //Kiem tra user va pass
+                        while (rs.next()) {
+                            if (rs.getString("usename").equals(i) && rs.getString("pass").equals(pass)) {
+                                //Kiiemr tra neu tu khoa cua client trung voi server thi báo da ton tai tai khoản trong server
+                                check = 1;
+                                if (clientAll.containsKey(i)) {
+                                    //Gửi thông tin này cho client
+                                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                                    dout.writeUTF("Tài khoản này đa tồn tại trong server.");
+                                } else {
+                                    //them du lieu của i(key) va du du lieu(s client) vao trong server
+                                    clientAll.put(i, s);
+                                    //In ra man hinh hien thi cua server
+                                    msgBox.append(i + " đang online \n");
+                                    // Truyen du lieu cho socket đó
+                                    DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                                    dout.writeUTF("");
+                                    //Nhan tin nhan của client
+                                    new MsgRead(s, i).start();
+                                    new PrepareClientList().start();
+                                }
+                            }
+                        }
+                        if (check == 0) {
+                            DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+                            dout.writeUTF("Tài khoản của ban chưa đăng kí");
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

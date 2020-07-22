@@ -2,7 +2,6 @@
 import java.io.*;
 import java.io.IOException;
 import java.net.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -183,40 +182,38 @@ public class LoginJFrame extends javax.swing.JFrame {
             String pass=txtPass.getText();
             String ip=txtIP.getText();
             
-            ResultSet rs=myConn.getData("login_client");
-            int check=0;
-            try {
-                while (rs.next()) {
-                    if (rs.getString("usename").equals(use) && rs.getString("pass").equals(pass)) {
-                        check=1;
-                        //JOptionPane.showMessageDialog(this, "Đăng nhập thành công");
                         Socket s = new Socket(ip, 3211);
                         DataInputStream din = new DataInputStream(s.getInputStream());
                         //Client truyen user cho server
                         //Kiểm tra tài khoản đã chạy chưa
                         DataOutputStream dout = new DataOutputStream(s.getOutputStream());
-                        dout.writeUTF(use);
+                        dout.writeUTF(use+":"+pass);
                         String i = new DataInputStream(s.getInputStream()).readUTF();
                         //System.out.println("oke"+i);
-                        if (i.equals("You are Already Register")) {
+                        if (i.equals("Tài khoản này đa tồn tại trong server.")) {
                             JOptionPane.showMessageDialog(this, "tài khoản này đã đăng nhập trước đó");
-                        } else {
+                        } else if(i.equals("Tài khoản của ban chưa đăng kí")){
+                            JOptionPane.showMessageDialog(this, "Tài khoản chưa đăng kí.");
+                            txtName.setText("");
+                            txtPass.setText("");
+                        }
+                        else {
                             //Chuyen giao dien sang client
                             //System.out.println("Hello");
                             new MyClientJFrame(use, s).setVisible(true);
                             this.dispose();
                         }
-                        break;
-                    }
-                }
-                if(check==0){
-                    JOptionPane.showMessageDialog(this, "Tài khoản chưa đăng kí.");
-                    txtName.setText("");
-                    txtPass.setText("");
-                }
-            } catch (SQLException ex) {
-                System.out.println("ERROR check");
-            }
+                        //break;
+               // }
+                //}
+//                if(check==0){
+//                    JOptionPane.showMessageDialog(this, "Tài khoản chưa đăng kí.");
+//                    txtName.setText("");
+//                    txtPass.setText("");
+//                }
+//            } catch (SQLException ex) {
+//                System.out.println("ERROR check");
+//            }
             
         } catch (IOException ex) {
             //System.out.println("ERROR");

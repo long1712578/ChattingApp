@@ -1,5 +1,8 @@
 
-import java.sql.ResultSet;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +46,8 @@ public class SignUpJFrame extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
         btnDangKi = new javax.swing.JButton();
         btnDangNhap = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtIP = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +84,11 @@ public class SignUpJFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel5.setText("IP");
+
+        txtIP.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,14 +102,21 @@ public class SignUpJFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(91, 91, 91)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                            .addComponent(txtIP)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -115,15 +132,19 @@ public class SignUpJFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(44, 44, 44)
+                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtIP, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDangKi, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDangNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -135,39 +156,34 @@ public class SignUpJFrame extends javax.swing.JFrame {
 
     private void btnDangKiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangKiActionPerformed
         // TODO add your handling code here:
+        try{
         String use=txtName.getText();
         String pass=txtPass.getText();
+        String ip=txtIP.getText();
+        
+        Socket s = new Socket(ip, 3211);
+        DataInputStream din = new DataInputStream(s.getInputStream());
+                        //Client truyen user cho server
+                        //Kiểm tra tài khoản đã chạy chưa
+        DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+        dout.writeUTF("signup"+use+":"+pass);
         
         //Kiem tra use va pass ton tai chua
-        ResultSet rs=myConn.getData("login_client");
-        int check=0;
-        try{
-            while(rs.next()){
-                if(rs.getString("usename").equals(use) && rs.getString("pass").equals(pass)){
-                    check=1;
-                    txtName.setText("");
-                    txtPass.setText("");
-                    JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại");
-                    break;
-                }
-            }
-        }catch(SQLException ex){
-            System.out.println("ERROR CONN SignUp");
-        }
-        if(check==0){
-            try {
-                myConn.insertAccount(use, pass);
+        //ResultSet rs=myConn.getData("login_client");
+        String i = new DataInputStream(s.getInputStream()).readUTF();
+            if (i.equals("no123")) {
+                JOptionPane.showMessageDialog(this, "tài khoản này đã đăng nhập trước đó");
+            } else if (i.equals("yes123")) {
                 JOptionPane.showMessageDialog(this, "Đăng kí thanh công");
                 try {
                     new LoginJFrame().setVisible(true);
+                    this.dispose();
                 } catch (SQLException ex) {
                     Logger.getLogger(SignUpJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                this.dispose();
-            } catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "Dang ki that bai");
-                Logger.getLogger(SignUpJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Khong tim that server.");
         }
     }//GEN-LAST:event_btnDangKiActionPerformed
 
@@ -227,6 +243,8 @@ public class SignUpJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField txtIP;
     private javax.swing.JTextField txtName;
     private javax.swing.JPasswordField txtPass;
     // End of variables declaration//GEN-END:variables
