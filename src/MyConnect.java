@@ -28,7 +28,7 @@ public class MyConnect {
 		try {
 			Class.forName(className);
 			connection=DriverManager.getConnection(url, user, pass);
-			System.out.println("Success connect");
+			//System.out.println("Success connect");
 		}catch (ClassNotFoundException e) {
 			// TODO: handle exception
 			System.out.println("Class not found");

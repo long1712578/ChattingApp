@@ -181,6 +181,9 @@ public class LoginJFrame extends javax.swing.JFrame {
             String use=txtName.getText();
             String pass=txtPass.getText();
             String ip=txtIP.getText();
+            if(use.equals("")|| pass.equals("")){
+                JOptionPane.showMessageDialog(this, "chưa nhập user hoặc pass");
+            }else{
             
                         Socket s = new Socket(ip, 3211);
                         DataInputStream din = new DataInputStream(s.getInputStream());
@@ -203,17 +206,7 @@ public class LoginJFrame extends javax.swing.JFrame {
                             new MyClientJFrame(use, s).setVisible(true);
                             this.dispose();
                         }
-                        //break;
-               // }
-                //}
-//                if(check==0){
-//                    JOptionPane.showMessageDialog(this, "Tài khoản chưa đăng kí.");
-//                    txtName.setText("");
-//                    txtPass.setText("");
-//                }
-//            } catch (SQLException ex) {
-//                System.out.println("ERROR check");
-//            }
+            }
             
         } catch (IOException ex) {
             //System.out.println("ERROR");

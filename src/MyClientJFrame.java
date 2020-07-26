@@ -1,10 +1,13 @@
 
+import java.awt.Font;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.util.StringTokenizer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 
 
 /*
@@ -95,7 +98,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                                 dim.addElement(u);
                             } 
                         }
-                        System.out.println("UL List: "+dim.toString());
+                        //System.out.println("UL List: "+dim.toString());
                         UL.setModel(dim);
                     }
                     else {
@@ -103,9 +106,9 @@ public class MyClientJFrame extends javax.swing.JFrame {
                             m = m.substring(9);
                             StringTokenizer st = new StringTokenizer(m, ":");
                             String n = st.nextToken();
-                            System.out.println("msg: " + n);
+                            //System.out.println("msg: " + n);
                             String filename = st.nextToken();
-                            System.out.println("file..." + filename);
+                            //System.out.println("file..." + filename);
                             txt_Show.append(" " + m + "\n");
                             //Luu ten file vao ULFile
                             
@@ -126,7 +129,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                             fos.write(bytes, 0, count);
                             fos.close();
                         } else {
-                            txt_Show.append(" " + m + "\n");
+                            txt_Show.append("." + m + "\n");
                         }
                     }
                 } catch (Exception e) {
@@ -157,6 +160,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
         txtMsg = new javax.swing.JTextField();
         btnFile = new javax.swing.JButton();
         btnSend = new javax.swing.JButton();
+        btnEmoji = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_Show = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -187,7 +191,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                 .addComponent(lbHA, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                 .addComponent(bnPhone)
                 .addContainerGap())
         );
@@ -221,7 +225,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbadmin, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbHA2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,23 +251,33 @@ public class MyClientJFrame extends javax.swing.JFrame {
             }
         });
 
+        btnEmoji.setIcon(new javax.swing.ImageIcon(getClass().getResource("/chattingapp/photo/smile.png"))); // NOI18N
+        btnEmoji.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmojiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(txtMsg)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtMsg, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnFile, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEmoji, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(2, 2, 2))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnEmoji, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSend)
                     .addComponent(btnFile, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -275,6 +289,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
         txt_Show.setRows(5);
         jScrollPane1.setViewportView(txt_Show);
 
+        UL.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
         UL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 ULMousePressed(evt);
@@ -315,14 +330,14 @@ public class MyClientJFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(btnGroup, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)))
                         .addGap(21, 21, 21)))
                 .addContainerGap())
         );
@@ -331,10 +346,9 @@ public class MyClientJFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -345,7 +359,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 13, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -411,7 +425,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
                        //DataOutputStream output=new DataOutputStream(socket.getOutputStream());
                        byte[] byteFile=new byte[BUFFER_SIZE];
                        int count=input.read(byteFile);
-                       System.out.println("gui file dem: "+count);
+                       //System.out.println("gui file dem: "+count);
                        dout.write(byteFile,0,count);
                         
                         txt_Show.append("Bạn gửi file thanh công \n");
@@ -463,6 +477,48 @@ public class MyClientJFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnGroupActionPerformed
 
+    private void btnEmojiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmojiActionPerformed
+        // TODO add your handling code here:
+        byte[] emojiBytes = new byte[]{(byte)0xF0, (byte)0x9F, (byte)0x98, (byte)0x80};
+        String emojiAsString = new String(emojiBytes, Charset.forName("UTF-8"));
+        //Integer codepoint=0x1F60A;
+        //String unicodeChar = new String(Character.toChars(codepoint.intValue()));
+        //String string = "😀";
+        //String emojiAsString=new String(emojiBytes,"UTF-8");
+        try {
+            String m = emojiAsString;
+            //String a=m.replaceAll("[\u1F600]", "grinningF");
+            //String a=m.replaceAll("\ud83d\ude00", "grinningF");
+            //System.out.println("emoji: "+a);
+            
+            String n = m;
+            String CU = clientUser;
+//            String str = ":smile::cat2:";
+//		String result = EmojiParser.parseToUnicode(str);
+//		System.out.println(result);
+            if (!clientUser.isEmpty()) {
+                //Gui tin nhan #Dau tien ma nhan biet, cu ten nguoi nhan, n la tin nhan
+                m = "#123456789long17ctt4" + CU + ":" + n;
+                dout.writeUTF(m);
+                //txtMsg.setText("");
+                //Font font = new Font("Segoe UI Emoji",Font.PLAIN,12);
+		//n.setFont(font);
+                
+                txt_Show.append("< Tôi gui cho " + CU + " > " + n + "\n");
+                //txt_Show.setFont(new java.awt.Font("Arial", 0, 13));
+            } else {
+                dout.writeUTF("#MSG_ALL"+m);
+                //txtMsg.setText("");
+                //Font font = new Font("Segoe UI Emoji",Font.PLAIN,12);
+		//txt_Show.setFont(font);
+                txt_Show.append("< Tôi gui cho group: >" + n + "\n");
+                //txt_Show.setFont(new java.awt.Font("Arial", 0, 13));
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Nguoi gui khong ton tai");
+        }
+    }//GEN-LAST:event_btnEmojiActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -499,6 +555,7 @@ public class MyClientJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> UL;
     private javax.swing.JLabel bnPhone;
+    private javax.swing.JButton btnEmoji;
     private javax.swing.JButton btnFile;
     private javax.swing.JButton btnGroup;
     private javax.swing.JButton btnSend;

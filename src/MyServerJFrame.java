@@ -65,7 +65,7 @@ public class MyServerJFrame extends javax.swing.JFrame {
                     s = ss.accept();//doi client
                     //Doc du lieu của socket gui cho server
                     String i = new DataInputStream(s.getInputStream()).readUTF();//Ten của client chay trong server
-                    System.out.println("i server: " + i);
+                    //System.out.println("i server: " + i);
                     //Kiem tra phan dangki
                     //Kiem tra dang nhap
                     if (i.contains("signup")) {
